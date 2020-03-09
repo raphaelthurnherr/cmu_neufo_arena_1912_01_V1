@@ -1,0 +1,40 @@
+#######################################
+# Syntax Coloring Map Servo
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+1912_01_V1_CMU_NEUFO_Bipolar_driver	KEYWORD1	1912_01_V1_CMU_NEUFO_Bipolar_driver	
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin						KEYWORD2
+get_serial_input_frame		KEYWORD2
+
+getStepperState				KEYWORD2
+stepperRotation				KEYWORD2
+setStepperDriveMode			KEYWORD2
+
+setDigitalOutput			KEYWORD2
+setStepperDriveMode			KEYWORD2
+selectI2Cchannel			KEYWORD2
+disableI2Cchannels			KEYWORD2
+getVoltage					KEYWORD2
+getDigitalInput				KEYWORD2
+setDigitalOutput					KEYWORD2
+setAnalogOutput				KEYWORD2
+
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+device_ads111x			LITERAL1
+device_mcp230xx			LITERAL1
+device_tca9544a			LITERAL1
+device_mcp4728 			LITERAL1
+device_pca9629 			LITERAL1
