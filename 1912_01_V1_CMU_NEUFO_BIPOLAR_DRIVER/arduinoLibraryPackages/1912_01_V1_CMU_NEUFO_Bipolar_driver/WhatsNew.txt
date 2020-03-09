@@ -1,2 +1,5 @@
 06/03/2020 V0.1.0
         - First library distribution
+
+09/03/2020 V1.1.0
+	- Add stepper rotation command from digital input

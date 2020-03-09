@@ -3,6 +3,12 @@
 #include "cmu_ws_1912_01_V1_board.h"
 #include "cmu_ws_1921_01_V1_board.h"
 
+
+// Define the default motor speed and steps for run from BNC trigger
+#define DEFAULT_MOTOR_SPEED 25
+#define DEFAULT_MOTOR_STEPS 200
+
+
 // Main board 1921 - IC7 digital output bit definition for driver enable
 #define GATE_A_ENABLE_BIT 6
 #define GATE_B_ENABLE_BIT 5
@@ -15,12 +21,18 @@
 #define STEPSCOUNT 3
 #define SYNC_EOF  5
 
+// Main board 1921 - IC7 digital input bit definition on BNC INPUTS 
+#define MOTOR_B_CMD_TRIGGER 8
+#define MOTOR_C_CMD_TRIGGER 13
+
 // Boards declaration
 board_1921_01_V01 arduino_1921_board;
 board_1912_01_V01 motor_1912_board;
 
 // Serial command read buffer
 unsigned char myMotorCommand[8];
+char motor_B_last_cmd_input_state;
+char motor_C_last_cmd_input_state;
 
 // Data commands
 char motorSelected=0;
@@ -35,7 +47,6 @@ int i;
 
 // Functions déclaration
 char get_serial_input_frame(unsigned char * myMotorCommand);    // Get the serial data, wait for 6bytes (frame lenght)
-
 
 // Arduino setup
 void setup() {
@@ -61,6 +72,28 @@ void setup() {
 // Main ARDUINO LOOP
 
 void loop() {
+
+
+  // Get input the BNC input state and make action if triggered, 
+  // reset trigget when BNC input go to lower state
+  
+  //  USE BNC INPUT TRIGGER 0 for motor B(=motor 1)
+  if(arduino_1921_board.getDigitalInput(MOTOR_B_CMD_TRIGGER)){
+    // Check if trigger was cleared
+    if(!motor_B_last_cmd_input_state){
+      motor_1912_board.stepperRotation(0, DEFAULT_MOTOR_SPEED, DEFAULT_MOTOR_STEPS);  
+      motor_B_last_cmd_input_state = 1;
+    }
+  }else motor_B_last_cmd_input_state = 0;
+
+  //  USE BNC INPUT TRIGGER 1 for motor C(=motor 2)
+  if(arduino_1921_board.getDigitalInput(MOTOR_C_CMD_TRIGGER)){
+    // Check if trigger was cleared
+    if(!motor_C_last_cmd_input_state){
+      motor_1912_board.stepperRotation(2, DEFAULT_MOTOR_SPEED, DEFAULT_MOTOR_STEPS);
+      motor_C_last_cmd_input_state = 1;
+    }
+  }else motor_C_last_cmd_input_state = 0;
 
   // Check the SOF and EOF before execute commands
   if(get_serial_input_frame(myMotorCommand)){
